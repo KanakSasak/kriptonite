@@ -25,28 +25,31 @@ func (c cliHandler) IsPrime(num int) bool {
 }
 
 func (c cliHandler) AreRelativePrimes(a, b int) bool {
-	//TODO implement me
-	panic("implement me")
+	data := c.CryptController.AreRelativePrimes(a, b)
+
+	return data
 }
 
 func (c cliHandler) CalculateFactorial(n int) int {
-	//TODO implement me
-	panic("implement me")
+	data := c.CryptController.CalculateFactorial(n)
+
+	return data
 }
 
 func (c cliHandler) CalculateFactors(n int) []int {
-	//TODO implement me
-	panic("implement me")
+	data := c.CryptController.CalculateFactors(n)
+
+	return data
 }
 
 func (c cliHandler) CalculateEulerFunction(n int) int {
-	//TODO implement me
-	panic("implement me")
+	data := c.CryptController.CalculateEulerFunction(n)
+	return data
 }
 
 func (c cliHandler) CalculateGCD(a, b int) int {
-	//TODO implement me
-	panic("implement me")
+	data := c.CryptController.CalculateGCD(a, b)
+	return data
 }
 
 func NewCliServer(ctx *adapter.HandlerContext) ports.Crypt {

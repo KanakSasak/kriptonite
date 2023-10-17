@@ -23,28 +23,28 @@ func (c cryptController) IsPrime(num int) bool {
 }
 
 func (c cryptController) AreRelativePrimes(a, b int) bool {
-	//TODO implement me
-	panic("implement me")
+	data := c.c.CryptService.AreRelativePrimes(a, b)
+	return data
 }
 
 func (c cryptController) CalculateFactorial(n int) int {
-	//TODO implement me
-	panic("implement me")
+	data := c.c.CryptService.CalculateFactorial(n)
+	return data
 }
 
 func (c cryptController) CalculateFactors(n int) []int {
-	//TODO implement me
-	panic("implement me")
+	data := c.c.CryptService.CalculateFactors(n)
+	return data
 }
 
 func (c cryptController) CalculateEulerFunction(n int) int {
-	//TODO implement me
-	panic("implement me")
+	data := c.c.CryptService.CalculateEulerFunction(n)
+	return data
 }
 
 func (c cryptController) CalculateGCD(a, b int) int {
-	//TODO implement me
-	panic("implement me")
+	data := c.c.CryptService.CalculateGCD(a, b)
+	return data
 }
 
 func NewCryptController(c *core.Container) ports.Crypt {
