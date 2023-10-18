@@ -9,6 +9,36 @@ type cryptController struct {
 	c *core.Container
 }
 
+func (c cryptController) ModPow(a, b, c2 float64) float64 {
+	data := c.c.CryptService.ModPow(a, b, c2)
+	return data
+}
+
+func (c cryptController) Mod(a, b float64) float64 {
+	data := c.c.CryptService.Mod(a, b)
+	return data
+}
+
+func (c cryptController) Pow(a, b float64) float64 {
+	data := c.c.CryptService.Pow(a, b)
+	return data
+}
+
+func (c cryptController) Orde(a, b int) int {
+	data := c.c.CryptService.Orde(a, b)
+	return data
+}
+
+func (c cryptController) Euclidean(a, b int) int {
+	data := c.c.CryptService.Euclidean(a, b)
+	return data
+}
+
+func (c cryptController) ExtEuclidean(a, b int) (int, int, int) {
+	data1, data2, data3 := c.c.CryptService.ExtEuclidean(a, b)
+	return data1, data2, data3
+}
+
 func (c cryptController) GeneratePrime(min, max int) ([]int, error) {
 	data, err := c.c.CryptService.GeneratePrime(min, max)
 	if err != nil {

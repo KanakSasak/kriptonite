@@ -8,9 +8,9 @@ import (
 )
 
 var (
-	relPrimeCmd = &cobra.Command{
-		Use:   "relprime",
-		Short: "Check Relative Prime Number",
+	modPowCmd = &cobra.Command{
+		Use:   "modpow",
+		Short: "Calculate Power Modulus",
 		RunE: func(cmd *cobra.Command, args []string) error {
 			cliHandler := handler.NewCliServer(ctx)
 
@@ -22,8 +22,12 @@ var (
 			if err != nil {
 				return err
 			}
+			args2, err := strconv.Atoi(args[2])
+			if err != nil {
+				return err
+			}
 
-			data := cliHandler.AreRelativePrimes(args0, args1)
+			data := cliHandler.ModPow(float64(args0), float64(args1), float64(args2))
 
 			fmt.Println(data)
 			return nil
@@ -32,5 +36,5 @@ var (
 )
 
 func init() {
-	rootCmd.AddCommand(relPrimeCmd)
+	rootCmd.AddCommand(modPowCmd)
 }

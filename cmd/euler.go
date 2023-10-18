@@ -8,9 +8,9 @@ import (
 )
 
 var (
-	relPrimeCmd = &cobra.Command{
-		Use:   "relprime",
-		Short: "Check Relative Prime Number",
+	eulerCmd = &cobra.Command{
+		Use:   "euler",
+		Short: "Calculate Euler Function",
 		RunE: func(cmd *cobra.Command, args []string) error {
 			cliHandler := handler.NewCliServer(ctx)
 
@@ -18,12 +18,8 @@ var (
 			if err != nil {
 				return err
 			}
-			args1, err := strconv.Atoi(args[1])
-			if err != nil {
-				return err
-			}
 
-			data := cliHandler.AreRelativePrimes(args0, args1)
+			data := cliHandler.CalculateEulerFunction(args0)
 
 			fmt.Println(data)
 			return nil
@@ -32,5 +28,5 @@ var (
 )
 
 func init() {
-	rootCmd.AddCommand(relPrimeCmd)
+	rootCmd.AddCommand(eulerCmd)
 }
