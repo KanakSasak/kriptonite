@@ -33,6 +33,6 @@ Welcome to Kriptonite! A suite of utilities designed to assist cryptography stud
 3. Generate Quotien Group (addtional & multiplicative)
 4. Generate Cyclic Group (addtional & multiplicative)
 5. Order Generator
-6. Calculate Polynomial
+6. Calculate Polynomial 
 
 [More feature coming soon...]
