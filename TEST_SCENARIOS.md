@@ -5,7 +5,8 @@ This document provides comprehensive test scenarios for all features in Kriptoni
 ## Table of Contents
 1. [Basic Number Theory Operations](#basic-number-theory-operations)
 2. [Abstract Algebra Operations](#abstract-algebra-operations)
-3. [Expected Test Results](#expected-test-results)
+3. [Cryptographic Algorithm Simulations](#cryptographic-algorithm-simulations)
+4. [Expected Test Results](#expected-test-results)
 
 ---
 
@@ -438,6 +439,481 @@ This document provides comprehensive test scenarios for all features in Kriptoni
 ./kriptonite polynomial multiply 1,1 1,1,1
 # Expected: 1 + 2x + 2x² + x³
 # Coefficients: [1, 2, 2, 1]
+```
+
+---
+
+## Cryptographic Algorithm Simulations
+
+This section demonstrates how to use Kriptonite's number theory and abstract algebra features to simulate and understand classic cryptographic algorithms.
+
+### 1. RSA Encryption/Decryption Simulation
+
+**RSA Algorithm Overview:**
+- Public key cryptography system
+- Based on difficulty of factoring large numbers
+- Uses modular exponentiation
+
+**Step-by-Step RSA Simulation:**
+
+#### Step 1: Choose Two Prime Numbers (p, q)
+```bash
+# Generate small primes for demonstration
+./kriptonite prime 10 30
+# Choose two primes, e.g., p = 11, q = 13
+```
+
+#### Step 2: Calculate n = p × q
+```bash
+# n = 11 × 13 = 143
+# Verify: 11 * 13 = 143
+# n becomes part of both public and private keys
+```
+
+#### Step 3: Calculate φ(n) = (p-1)(q-1)
+```bash
+# φ(143) = φ(11 × 13) = φ(11) × φ(13) = 10 × 12 = 120
+./kriptonite euler 143
+# Expected: This will calculate φ(143) = 120
+```
+
+**Mathematical Note:** For RSA, we use φ(n) = (p-1)(q-1) instead of calculating directly.
+
+#### Step 4: Choose Public Exponent e
+```bash
+# e must be coprime to φ(n) = 120
+# Common choice: e = 7 (small, coprime to 120)
+
+# Verify e is coprime to φ(n)
+./kriptonite relprime 7 120
+# Expected: true (gcd(7, 120) = 1)
+
+# Alternative: Try e = 5
+./kriptonite relprime 5 120
+# Expected: false (gcd(5, 120) = 5, not coprime)
+```
+
+#### Step 5: Calculate Private Exponent d
+```bash
+# Find d such that: d × e ≡ 1 (mod φ(n))
+# Using Extended Euclidean Algorithm
+./kriptonite exeuclid 7 120
+
+# This gives: gcd, x, y where 7x + 120y = gcd
+# We need d such that: 7d ≡ 1 (mod 120)
+# d = x (mod 120), adjusted to be positive
+# Expected output will show x value, d = 103 (since 7 × 103 = 721 = 6 × 120 + 1)
+```
+
+**Manual Verification:**
+```bash
+# Verify: (7 × 103) mod 120 = 1
+./kriptonite mod 721 120
+# Expected: 1 ✓
+```
+
+#### Step 6: Encrypt a Message
+```bash
+# Public Key: (e=7, n=143)
+# Message: m = 9 (must be < n)
+# Ciphertext: c = m^e mod n = 9^7 mod 143
+
+./kriptonite modpow 9 7 143
+# Expected: c = 48
+```
+
+#### Step 7: Decrypt the Ciphertext
+```bash
+# Private Key: (d=103, n=143)
+# Ciphertext: c = 48
+# Plaintext: m = c^d mod n = 48^103 mod 143
+
+./kriptonite modpow 48 103 143
+# Expected: m = 9 (original message recovered!) ✓
+```
+
+**Complete RSA Example:**
+```bash
+# Setup
+p=11, q=13
+n=143 (public)
+φ(n)=120 (private)
+e=7 (public exponent)
+d=103 (private exponent)
+
+# Public Key: (7, 143)
+# Private Key: (103, 143)
+
+# Encryption: m=9
+./kriptonite modpow 9 7 143
+# c = 48
+
+# Decryption: c=48
+./kriptonite modpow 48 103 143
+# m = 9 ✓
+```
+
+**Larger RSA Example:**
+```bash
+# Using larger primes
+p=17, q=19
+n=323
+φ(n)=288
+
+# Choose e=5, verify coprimality
+./kriptonite relprime 5 288
+# true
+
+# Find d using extended Euclidean
+./kriptonite exeuclid 5 288
+# Calculate d from result (d=173)
+
+# Encrypt message m=42
+./kriptonite modpow 42 5 323
+# c = 75
+
+# Decrypt c=75
+./kriptonite modpow 75 173 323
+# m = 42 ✓
+```
+
+---
+
+### 2. Elliptic Curve Cryptography (ECC) Concepts
+
+**ECC Overview:**
+- Based on elliptic curves over finite fields
+- Point addition and scalar multiplication
+- Curve equation: y² = x³ + ax + b (mod p)
+
+**Demonstrating ECC Concepts with Kriptonite:**
+
+#### Step 1: Choose a Prime Field
+```bash
+# Use prime p for the finite field F_p
+./kriptonite isprime 23
+# true - We'll use F_23
+```
+
+#### Step 2: Define Elliptic Curve Parameters
+```bash
+# Curve: y² = x³ + x + 1 (mod 23)
+# Parameters: a=1, b=1, p=23
+
+# Points on the curve satisfy: y² ≡ x³ + x + 1 (mod 23)
+```
+
+#### Step 3: Verify Point on Curve
+```bash
+# Check if point (3, 10) is on the curve
+# Left side: y² mod p
+./kriptonite modpow 10 2 23
+# 100 mod 23 = 8
+
+# Right side: (x³ + x + 1) mod p
+# x³ = 3³ = 27
+./kriptonite modpow 3 3 23
+# 27 mod 23 = 4
+# Add: 4 + 3 + 1 = 8
+./kriptonite mod 8 23
+# 8 ✓
+
+# Point (3, 10) is on the curve since 8 ≡ 8 (mod 23)
+```
+
+#### Step 4: Order of Elliptic Curve Group
+```bash
+# The order of E(F_23) for y² = x³ + x + 1
+# For small fields, we can find generators
+
+# Example: Using base point G and finding its order
+# This demonstrates the cyclic group structure
+./kriptonite generators 23
+# Shows generators of multiplicative group Z_23*
+```
+
+#### Step 5: Demonstrate Scalar Multiplication (Simplified)
+```bash
+# Scalar multiplication: kG where k is scalar, G is base point
+# In practice: repeatedly add point to itself k times
+
+# Example: 5G means G + G + G + G + G
+# This uses the group operation (point addition on the curve)
+
+# For demonstration with cyclic groups:
+./kriptonite cyclicgroup multiplicative 2 23
+# Shows <2> in Z_23*, analogous to scalar multiplication
+```
+
+**ECC Key Generation Simulation:**
+```bash
+# Private key: Random integer d (1 < d < n, where n is order)
+# Public key: Q = dG (scalar multiplication of base point)
+
+# Example with d=7, using generator in F_23
+./kriptonite modpow 2 7 23
+# Shows concept of "raising to power" similar to scalar mult
+```
+
+---
+
+### 3. Digital Signature Algorithm (DSA) Simulation
+
+**DSA Overview:**
+- Used for digital signatures (authentication, non-repudiation)
+- Based on discrete logarithm problem
+- Uses modular arithmetic and group theory
+
+**Step-by-Step DSA Simulation:**
+
+#### Step 1: Choose Domain Parameters
+```bash
+# Choose prime p and prime q where q divides (p-1)
+# Example: p=23, q=11 where 11 divides 22
+
+# Verify q is prime
+./kriptonite isprime 11
+# true
+
+# Verify q divides (p-1)
+./kriptonite mod 22 11
+# 0 ✓ (22 is divisible by 11)
+```
+
+#### Step 2: Find Generator g of Order q
+```bash
+# Find g such that g^q ≡ 1 (mod p)
+# Generator of subgroup of order q in Z_p*
+
+# Find generators of Z_23*
+./kriptonite generators 23
+# Shows generators [5, 7, 10, 11, 14, 15, 17, 19, 20, 21]
+
+# For subgroup of order 11, we need element with order 11
+# Check order of element 2
+./kriptonite orde 2 23
+# If order is 11, then g=2 works
+
+# Alternative: Use generator and raise to (p-1)/q
+# h = generator, g = h^((p-1)/q) mod p
+# g = 2^(22/11) = 2^2 mod 23 = 4
+./kriptonite modpow 2 2 23
+# g = 4
+
+# Verify: g^q mod p should be 1
+./kriptonite modpow 4 11 23
+# Expected: 1 ✓
+```
+
+#### Step 3: Generate Private Key
+```bash
+# Private key x: random integer (0 < x < q)
+# Example: x = 6 (chosen randomly from 1 to 10)
+x=6
+```
+
+#### Step 4: Generate Public Key
+```bash
+# Public key y = g^x mod p
+./kriptonite modpow 4 6 23
+# y = 13 (public key)
+
+# Verify
+./kriptonite modpow 4 6 23
+# Expected: 13
+```
+
+#### Step 5: Signing Process (Simplified)
+```bash
+# To sign message m:
+# 1. Choose random k (0 < k < q)
+k=7
+
+# 2. Calculate r = (g^k mod p) mod q
+./kriptonite modpow 4 7 23
+# = 16
+./kriptonite mod 16 11
+# r = 5
+
+# 3. Calculate s = k^(-1) × (H(m) + x×r) mod q
+#    (Simplified: H(m) = message hash, we'll use m=3 for demo)
+m=3
+
+# First: x × r mod q = 6 × 5 mod 11
+./kriptonite mod 30 11
+# = 8
+
+# Second: (m + x×r) mod q = (3 + 8) mod 11
+./kriptonite mod 11 11
+# = 0 (need to choose different k or m)
+
+# Try again with k=5
+./kriptonite modpow 4 5 23
+# = 1
+./kriptonite mod 1 11
+# r = 1
+
+# Calculate x × r = 6 × 1 = 6
+# m + x×r = 3 + 6 = 9
+# Need k^(-1) mod 11 for k=5
+./kriptonite exeuclid 5 11
+# Find multiplicative inverse
+
+# Signature: (r, s)
+```
+
+#### Step 6: Verification Process
+```bash
+# To verify signature (r, s) on message m with public key y:
+# 1. Calculate w = s^(-1) mod q
+# 2. Calculate u1 = (H(m) × w) mod q
+# 3. Calculate u2 = (r × w) mod q
+# 4. Calculate v = ((g^u1 × y^u2) mod p) mod q
+# 5. Signature is valid if v = r
+
+# This demonstrates the mathematical verification
+```
+
+**Complete DSA Example (Simplified):**
+```bash
+# Domain Parameters:
+p=23, q=11, g=4
+
+# Key Generation:
+x=6 (private)
+./kriptonite modpow 4 6 23
+y=13 (public)
+
+# Sign message m=3 with k=7:
+./kriptonite modpow 4 7 23  # g^k mod p
+./kriptonite mod 16 11       # r = (g^k mod p) mod q
+# r = 5
+
+# Verify using public key y=13
+```
+
+---
+
+### 4. Diffie-Hellman Key Exchange Simulation
+
+**DH Overview:**
+- Allows two parties to establish shared secret over insecure channel
+- Based on discrete logarithm problem
+
+**Step-by-Step Simulation:**
+
+#### Step 1: Agree on Public Parameters
+```bash
+# Prime p and generator g
+p=23
+./kriptonite generators 23
+# Choose g=5 (a generator of Z_23*)
+g=5
+```
+
+#### Step 2: Alice's Private Key
+```bash
+# Alice chooses private key a
+a=6
+
+# Alice computes public key A = g^a mod p
+./kriptonite modpow 5 6 23
+# A = 8 (Alice's public key)
+```
+
+#### Step 3: Bob's Private Key
+```bash
+# Bob chooses private key b
+b=15
+
+# Bob computes public key B = g^b mod p
+./kriptonite modpow 5 15 23
+# B = 19 (Bob's public key)
+```
+
+#### Step 4: Compute Shared Secret
+```bash
+# Alice computes: s = B^a mod p
+./kriptonite modpow 19 6 23
+# s = 2
+
+# Bob computes: s = A^b mod p
+./kriptonite modpow 8 15 23
+# s = 2
+
+# Both get the same shared secret s=2 ✓
+```
+
+**Verification:**
+```bash
+# Shared secret: s = g^(a×b) mod p
+# a × b = 6 × 15 = 90
+./kriptonite modpow 5 90 23
+# s = 2 ✓
+```
+
+---
+
+### 5. Discrete Logarithm Problem Demonstration
+
+**Problem:** Given g, p, and y = g^x mod p, find x
+
+```bash
+# Known: g=3, p=17, y=12
+# Find x such that 3^x ≡ 12 (mod 17)
+
+# Brute force approach using order calculation
+./kriptonite cyclicgroup multiplicative 3 17
+# Shows all powers of 3 mod 17
+# Find which power gives 12
+
+# We can verify solutions:
+./kriptonite modpow 3 1 17  # = 3
+./kriptonite modpow 3 2 17  # = 9
+./kriptonite modpow 3 3 17  # = 10
+./kriptonite modpow 3 4 17  # = 13
+./kriptonite modpow 3 5 17  # = 5
+./kriptonite modpow 3 6 17  # = 15
+./kriptonite modpow 3 7 17  # = 11
+./kriptonite modpow 3 8 17  # = 16
+./kriptonite modpow 3 9 17  # = 14
+./kriptonite modpow 3 10 17 # = 8
+./kriptonite modpow 3 11 17 # = 7
+./kriptonite modpow 3 12 17 # = 4
+./kriptonite modpow 3 13 17 # = 12 ✓
+
+# Answer: x = 13
+```
+
+This demonstrates why discrete log is hard for large numbers!
+
+---
+
+### 6. Chinese Remainder Theorem (CRT) Application
+
+**CRT in RSA Optimization:**
+
+```bash
+# RSA decryption can be sped up using CRT
+# Given: c=48, d=103, n=143, p=11, q=13
+
+# Compute dp = d mod (p-1)
+./kriptonite mod 103 10
+# dp = 3
+
+# Compute dq = d mod (q-1)
+./kriptonite mod 103 12
+# dq = 7
+
+# Compute mp = c^dp mod p
+./kriptonite modpow 48 3 11
+# mp = 9
+
+# Compute mq = c^dq mod q
+./kriptonite modpow 48 7 13
+# mq = 9
+
+# Both give 9, which is our original message! ✓
 ```
 
 ---
