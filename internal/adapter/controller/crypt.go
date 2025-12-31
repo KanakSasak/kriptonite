@@ -77,6 +77,52 @@ func (c cryptController) CalculateGCD(a, b int) int {
 	return data
 }
 
+// Abstract Algebra operations
+
+func (c cryptController) GenerateSetGroup(n int) []int {
+	return c.c.CryptService.GenerateSetGroup(n)
+}
+
+func (c cryptController) GenerateAdditiveCoset(subgroup []int, element, modulus int) []int {
+	return c.c.CryptService.GenerateAdditiveCoset(subgroup, element, modulus)
+}
+
+func (c cryptController) GenerateMultiplicativeCoset(subgroup []int, element, modulus int) []int {
+	return c.c.CryptService.GenerateMultiplicativeCoset(subgroup, element, modulus)
+}
+
+func (c cryptController) GenerateAdditiveQuotientGroup(n int, subgroupSize int) [][]int {
+	return c.c.CryptService.GenerateAdditiveQuotientGroup(n, subgroupSize)
+}
+
+func (c cryptController) GenerateMultiplicativeQuotientGroup(n int, subgroup []int) [][]int {
+	return c.c.CryptService.GenerateMultiplicativeQuotientGroup(n, subgroup)
+}
+
+func (c cryptController) GenerateAdditiveCyclicGroup(generator, modulus int) []int {
+	return c.c.CryptService.GenerateAdditiveCyclicGroup(generator, modulus)
+}
+
+func (c cryptController) GenerateMultiplicativeCyclicGroup(generator, modulus int) []int {
+	return c.c.CryptService.GenerateMultiplicativeCyclicGroup(generator, modulus)
+}
+
+func (c cryptController) FindGenerators(n int) []int {
+	return c.c.CryptService.FindGenerators(n)
+}
+
+func (c cryptController) EvaluatePolynomial(coefficients []int, x int) int {
+	return c.c.CryptService.EvaluatePolynomial(coefficients, x)
+}
+
+func (c cryptController) AddPolynomials(poly1, poly2 []int) []int {
+	return c.c.CryptService.AddPolynomials(poly1, poly2)
+}
+
+func (c cryptController) MultiplyPolynomials(poly1, poly2 []int) []int {
+	return c.c.CryptService.MultiplyPolynomials(poly1, poly2)
+}
+
 func NewCryptController(c *core.Container) ports.Crypt {
 	return &cryptController{c}
 }
