@@ -55,7 +55,7 @@ func (c cliHandler) GeneratePrime(min, max int) ([]int, error) {
 }
 
 func (c cliHandler) IsPrime(num int) bool {
-	data := c.IsPrime(num)
+	data := c.CryptController.IsPrime(num)
 
 	return data
 }

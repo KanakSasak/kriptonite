@@ -25,7 +25,7 @@ func (c cryptService) Pow(a, b float64) float64 {
 
 func (c cryptService) Orde(a, b int) int {
 	for i := 1; i <= b; i++ {
-		fmt.Printf("value %d Mod %d\n", c.ModPow(float64(a), float64(i), float64(b)), b)
+		fmt.Printf("value %.0f Mod %d\n", c.ModPow(float64(a), float64(i), float64(b)), b)
 		if c.ModPow(float64(a), float64(i), float64(b)) == 1 {
 			return i
 		}
