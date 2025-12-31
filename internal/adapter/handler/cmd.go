@@ -88,6 +88,52 @@ func (c cliHandler) CalculateGCD(a, b int) int {
 	return data
 }
 
+// Abstract Algebra operations
+
+func (c cliHandler) GenerateSetGroup(n int) []int {
+	return c.CryptController.GenerateSetGroup(n)
+}
+
+func (c cliHandler) GenerateAdditiveCoset(subgroup []int, element, modulus int) []int {
+	return c.CryptController.GenerateAdditiveCoset(subgroup, element, modulus)
+}
+
+func (c cliHandler) GenerateMultiplicativeCoset(subgroup []int, element, modulus int) []int {
+	return c.CryptController.GenerateMultiplicativeCoset(subgroup, element, modulus)
+}
+
+func (c cliHandler) GenerateAdditiveQuotientGroup(n int, subgroupSize int) [][]int {
+	return c.CryptController.GenerateAdditiveQuotientGroup(n, subgroupSize)
+}
+
+func (c cliHandler) GenerateMultiplicativeQuotientGroup(n int, subgroup []int) [][]int {
+	return c.CryptController.GenerateMultiplicativeQuotientGroup(n, subgroup)
+}
+
+func (c cliHandler) GenerateAdditiveCyclicGroup(generator, modulus int) []int {
+	return c.CryptController.GenerateAdditiveCyclicGroup(generator, modulus)
+}
+
+func (c cliHandler) GenerateMultiplicativeCyclicGroup(generator, modulus int) []int {
+	return c.CryptController.GenerateMultiplicativeCyclicGroup(generator, modulus)
+}
+
+func (c cliHandler) FindGenerators(n int) []int {
+	return c.CryptController.FindGenerators(n)
+}
+
+func (c cliHandler) EvaluatePolynomial(coefficients []int, x int) int {
+	return c.CryptController.EvaluatePolynomial(coefficients, x)
+}
+
+func (c cliHandler) AddPolynomials(poly1, poly2 []int) []int {
+	return c.CryptController.AddPolynomials(poly1, poly2)
+}
+
+func (c cliHandler) MultiplyPolynomials(poly1, poly2 []int) []int {
+	return c.CryptController.MultiplyPolynomials(poly1, poly2)
+}
+
 func NewCliServer(ctx *adapter.HandlerContext) ports.Crypt {
 	return &cliHandler{
 		CryptController: ctx.CryptController,
