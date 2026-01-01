@@ -12,7 +12,28 @@ type cryptService struct {
 }
 
 func (c2 cryptService) ModPow(a, b, c float64) float64 {
-	return math.Mod(math.Pow(a, b), c)
+	// Use modular exponentiation (square-and-multiply algorithm)
+	// to avoid overflow for large exponents
+	base := int64(a)
+	exp := int64(b)
+	mod := int64(c)
+
+	if mod == 1 {
+		return 0
+	}
+
+	result := int64(1)
+	base = base % mod
+
+	for exp > 0 {
+		if exp%2 == 1 {
+			result = (result * base) % mod
+		}
+		exp = exp >> 1
+		base = (base * base) % mod
+	}
+
+	return float64(result)
 }
 
 func (c cryptService) Mod(a, b float64) float64 {
@@ -25,7 +46,7 @@ func (c cryptService) Pow(a, b float64) float64 {
 
 func (c cryptService) Orde(a, b int) int {
 	for i := 1; i <= b; i++ {
-		fmt.Printf("value %d Mod %d\n", c.ModPow(float64(a), float64(i), float64(b)), b)
+		fmt.Printf("value %.0f Mod %d\n", c.ModPow(float64(a), float64(i), float64(b)), b)
 		if c.ModPow(float64(a), float64(i), float64(b)) == 1 {
 			return i
 		}
